@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استبيان العيادات الطبية التخصصية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .radio-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .radio-custom:checked {
+            border-color: #10b981;
+            background-color: #10b981;
+        }
+        
+        .radio-custom:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full card-shadow mb-4">
+                <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">استبيان العيادات الطبية التخصصية</h1>
+            <p class="text-gray-600">نقدر وقتكم في تقييم خدماتنا الطبية</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="max-w-2xl mx-auto mb-8">
+            <div class="bg-white rounded-full h-3 card-shadow">
+                <div id="progressBar" class="progress-bar bg-gradient-to-r from-emerald-500 to-green-600 h-3 rounded-full" style="width: 0%"></div>
+            </div>
+            <p class="text-center text-sm text-gray-600 mt-2">
+                <span id="currentStep">0</span> من 8 خطوات مكتملة
+            </p>
+        </div>
+
+        <!-- Form -->
+        <div class="max-w-2xl mx-auto">
+            <form id="surveyForm" class="bg-white rounded-2xl card-shadow p-8 space-y-8">
+                
+                <!-- Phone Number -->
+                <div id="step1" class="form-step">
+                    <label class="block text-lg font-semibold text-gray-800 mb-4">رقم الموبايل</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required
+                           class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:outline-none text-lg"
+                           placeholder="9xxxxxxx أو 6xxxxxxx أو 5xxxxxxx"
+                           pattern="[569][0-9]{7}"
+                           maxlength="8">
+                </div>
+
+                <!-- Patient Name -->
+                <div id="step2" class="form-step hidden">
+                    <label class="block text-lg font-semibold text-gray-800 mb-4">اسم المريض</label>
+                    <input type="text" id="patientName" name="patientName" required
+                           class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:outline-none text-lg"
+                           placeholder="أدخل اسم المريض الكامل">
+                </div>
+
+                <!-- Question 1: First Visit -->
+                <div id="step3" class="form-step hidden">
+                    <label class="block text-lg font-semibold text-gray-800 mb-6">هل هذه أول زيارة لعياداتنا التخصصية؟</label>
+                    <div class="space-y-4">
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="firstVisit" value="yes" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">نعم، هذه أول زيارة</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="firstVisit" value="no" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">لا، زرت العيادة من قبل</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 2: Doctor Professionalism -->
+                <div id="step4" class="form-step hidden">
+                    <label class="block text-lg font-semibold text-gray-800 mb-6">ما هو تقييمك لمستوى الاحترافية والخبرة لدى الطبيب/الاختصاصي الذي قمت بزيارته؟</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="doctorRating" value="excellent" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">ممتاز</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="doctorRating" value="very-good" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">جيد جداً</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="doctorRating" value="good" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">جيد</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="doctorRating" value="fair" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">مقبول</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="doctorRating" value="poor" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">ضعيف</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 3: Waiting Time -->
+                <div id="step5" class="form-step hidden">
+                    <label class="block text-lg font-semibold text-gray-800 mb-6">كيف تقيم وقت الانتظار في العيادة؟</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="waitingTime" value="very-short" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">قصير جداً (أقل من 15 دقيقة)</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="waitingTime" value="acceptable" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">مقبول (15-30 دقيقة)</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="waitingTime" value="long" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">طويل (30-60 دقيقة)</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="waitingTime" value="very-long" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">طويل جداً (أكثر من ساعة)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 4: Staff Service -->
+                <div id="step6" class="form-step hidden">
+                    <label class="block text-lg font-semibold text-gray-800 mb-6">كيف تقيم مستوى الخدمة المقدمة من قبل الطاقم الإداري؟</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="staffService" value="excellent" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">ممتاز</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="staffService" value="very-good" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">جيد جداً</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="staffService" value="good" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">جيد</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="staffService" value="fair" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">مقبول</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="staffService" value="poor" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">ضعيف</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 5: Recommendation -->
+                <div id="step7" class="form-step hidden">
+                    <label class="block text-lg font-semibold text-gray-800 mb-6">هل تنصح الآخرين بزيارة عياداتنا التخصصية؟</label>
+                    <div class="space-y-4">
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="recommendation" value="definitely" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">بالتأكيد أنصح بها</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="recommendation" value="probably" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">على الأرجح أنصح بها</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="recommendation" value="maybe" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">ربما</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="recommendation" value="probably-not" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">على الأرجح لا أنصح بها</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-emerald-300 transition-colors">
+                            <input type="radio" name="recommendation" value="definitely-not" class="radio-custom ml-3">
+                            <span class="text-lg text-gray-700">بالتأكيد لا أنصح بها</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Suggestions -->
+                <div id="step8" class="form-step hidden">
+                    <label class="block text-lg font-semibold text-gray-800 mb-4">مقترحاتك وملاحظاتك</label>
+                    <p class="text-gray-600 mb-4">يرجى مشاركة أي مقترحات أو ملاحظات لتحسين خدماتنا (اختياري)</p>
+                    <textarea id="suggestions" name="suggestions" rows="5"
+                              class="input-focus w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:outline-none text-lg resize-none"
+                              placeholder="اكتب مقترحاتك وملاحظاتك هنا..."></textarea>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between pt-6">
+                    <button type="button" id="prevBtn" class="hidden px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors font-semibold">
+                        السابق
+                    </button>
+                    <button type="button" id="nextBtn" class="px-6 py-3 btn-submit text-white rounded-xl font-semibold">
+                        التالي
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="hidden max-w-2xl mx-auto mt-8">
+            <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-8 text-center card-shadow">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-green-800 mb-2">شكراً لك!</h2>
+                <p class="text-green-700">تم إرسال استبيانك بنجاح. نقدر وقتك وآراءك القيمة.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 8;
+
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentStepSpan = document.getElementById('currentStep');
+        const form = document.getElementById('surveyForm');
+        const successMessage = document.getElementById('successMessage');
+
+        function updateProgress() {
+            const progress = ((currentStep - 1) / totalSteps) * 100;
+            progressBar.style.width = progress + '%';
+            currentStepSpan.textContent = currentStep - 1;
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.form-step').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`step${step}`).classList.remove('hidden');
+
+            if (step === 1) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+
+            if (step === totalSteps) {
+                nextBtn.textContent = 'إرسال الاستبيان';
+                nextBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                nextBtn.classList.remove('btn-submit');
+            } else {
+                nextBtn.textContent = 'التالي';
+                nextBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                nextBtn.classList.add('btn-submit');
+            }
+
+            updateProgress();
+        }
+
+        function validateCurrentStep() {
+            const currentStepElement = document.getElementById(`step${currentStep}`);
+
+            if (currentStep === 1) {
+                const phoneNumber = document.getElementById('phoneNumber').value.trim();
+                const kuwaitPattern = /^[569][0-9]{7}$/;
+                return phoneNumber !== '' && kuwaitPattern.test(phoneNumber);
+            } else if (currentStep === 2) {
+                const patientName = document.getElementById('patientName').value.trim();
+                return patientName !== '';
+            } else if (currentStep === 8) {
+                return true;
+            } else {
+                const inputs = currentStepElement.querySelectorAll('input[type="radio"]');
+                const groupName = inputs[0].name;
+                return document.querySelector(`input[name="${groupName}"]:checked`) !== null;
+            }
+        }
+
+        nextBtn.addEventListener('click', function() {
+            if (!validateCurrentStep()) {
+                alert('يرجى إكمال هذه الخطوة قبل المتابعة');
+                return;
+            }
+
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            } else {
+                submitSurvey();
+            }
+        });
+
+        function submitSurvey() {
+            nextBtn.disabled = true;
+            nextBtn.textContent = 'جاري الإرسال...';
+
+            const formData = {
+                patientName: document.getElementById('patientName').value.trim(),
+                phoneNumber: document.getElementById('phoneNumber').value.trim(),
+                firstVisit: document.querySelector('input[name="firstVisit"]:checked')?.value,
+                doctorRating: document.querySelector('input[name="doctorRating"]:checked')?.value,
+                waitingTime: document.querySelector('input[name="waitingTime"]:checked')?.value,
+                staffService: document.querySelector('input[name="staffService"]:checked')?.value,
+                recommendation: document.querySelector('input[name="recommendation"]:checked')?.value,
+                suggestions: document.getElementById('suggestions').value.trim(),
+                submissionDate: new Date().toISOString(),
+                clinic: 'NasharClinic'
+            };
+
+            fetch('https://n8n.101488.xyz/webhook/NasharClinic1', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    form.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                    progressBar.style.width = '100%';
+                    currentStepSpan.textContent = totalSteps;
+                } else {
+                    throw new Error('فشل في إرسال البيانات');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('حدث خطأ أثناء إرسال الاستبيان. يرجى المحاولة مرة أخرى.');
+                nextBtn.disabled = false;
+                nextBtn.textContent = 'إرسال الاستبيان';
+            });
+        }
+
+        prevBtn.addEventListener('click', function() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        // ======== قراءة رقم الموبايل من URL وتطبيعه والتحقق منه =========
+        function getURLPhoneRaw() {
+            const params = new URLSearchParams(window.location.search);
+            const keys = ['phoneNumber', 'phone', 'ph', 'mobile', 'msisdn'];
+            for (const k of keys) {
+                const v = params.get(k);
+                if (v && v.trim() !== '') return v.trim();
+            }
+            return null;
+        }
+
+        function normalizePhone(value) {
+            // أرقام فقط
+            let digits = String(value).replace(/\D/g, '');
+            // إزالة كود الدولة (00965 أو 965) إن وُجد
+            if (digits.startsWith('00965')) digits = digits.slice(5);
+            else if (digits.startsWith('965')) digits = digits.slice(3);
+            // في حال كان أطول من 8 خُذ آخر 8 أرقام
+            if (digits.length > 8) digits = digits.slice(-8);
+            return digits;
+        }
+
+        function prefillPhoneFromURL() {
+            const raw = getURLPhoneRaw();
+            const input = document.getElementById('phoneNumber');
+            const kuwaitPattern = /^[569][0-9]{7}$/;
+
+            if (raw) {
+                const normalized = normalizePhone(raw);
+                input.value = normalized;
+
+                if (kuwaitPattern.test(normalized)) {
+                    // صالح: انتقل مباشرة إلى خطوة الاسم
+                    currentStep = 2;
+                    showStep(2);
+                    return;
+                }
+            }
+            // لا يوجد/غير صالح: ابدأ من خطوة الموبايل
+            showStep(1);
+        }
+
+        // Initialize
+        prefillPhoneFromURL();
+
+        // دعم زر Enter
+        document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') nextBtn.click();
+        });
+
+        document.getElementById('patientName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') nextBtn.click();
+        });
+
+        // الانتقال التلقائي بعد اختيار أي راديو
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                setTimeout(() => {
+                    if (currentStep < totalSteps) nextBtn.click();
+                }, 500);
+            });
+        });
+    </script>
+
+    <!-- اترك سكربت Cloudflare كما هو -->
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9789fc8a4659e21d',t:'MTc1Njc4NDQzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
